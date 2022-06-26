@@ -36,3 +36,20 @@ export const addToFirebase= async (item) => {
     console.log(error);
   }
 };
+export const updateItemFromFirebase = async (item, id) => {
+    try {
+      const todoRef = db.collection("todos").doc(id);
+      await todoRef.update(item);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  export const clearItemsFromFirebase = async (item) => {
+    try {
+        const todoRef = db.collection("todos").doc(item.id);
+         await todoRef.delete()
+      } catch (error) {
+        console.log(error);
+      }
+  };

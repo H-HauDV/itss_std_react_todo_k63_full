@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { addToFirebase, getItemsFromFirebase } from "../lib/firebase";
+import {
+  addToFirebase,
+  getItemsFromFirebase,
+  updateItemFromFirebase,
+  clearItemsFromFirebase,
+} from "../lib/firebase";
 
-function useFbStorage() {
+function useFirebaseStorage() {
   const [items, setItems] = useState([]);
   useEffect(() => {
     getItems();
@@ -16,8 +21,26 @@ function useFbStorage() {
     await addToFirebase(newItem);
     setItems([...items, newItem]);
   };
+  const updateItem = async (checked) => {
+    const changes = { done: !checked.done };
+    await updateItemFromFirebase(changes, checked.id);
+    const newItemList = items.map((item) => {
+      if (item.id === checked.id) {
+        item = { ...item, changes };
+      }
+      return item;
+    });
+    setItems(newItemList);
+  };
 
-  return [items, addItems];
+  const clearItems = () => {
+    items.map((item) => {
+      clearItemsFromFirebase(item);
+    });
+    setItems([]);
+    console.log("cleared");
+  };
+  return [items, addItems, updateItem, clearItems];
 }
 
-export default useFbStorage;
+export default useFirebaseStorage;
