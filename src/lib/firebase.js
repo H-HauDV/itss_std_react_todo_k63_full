@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 const firebaseConfig = {
   apiKey: "AIzaSyCttQgWJlKOqMiLroiUu96Ll-4OXF1qhX4",
   authDomain: "todo-app-1-2022-itssinjapanese.firebaseapp.com",
@@ -11,4 +12,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+export const addToFirebase= async (item) => {
+  try {
+    const todoCollection = db.collection("todos");
+    await todoCollection.add(item);
+  } catch (error) {
+    console.log(error);
+  }
+};

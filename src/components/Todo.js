@@ -6,13 +6,13 @@ import Input from './Input';
 import Filter from './Filter';
 
 /* カスタムフック */
-import useStorage from '../hooks/storage';
-
+// import useStorage from '../hooks/storage';
+import useFirebaseStorage from '../hooks/firebaseStorage';
 /* ライブラリ */
 import {getKey} from "../lib/util";
 
 function Todo() {
-  const [items, putItems, clearItems] = useStorage();
+  const [items, addItems, putItems, clearItems] = useFirebaseStorage();
   
   const [filter, setFilter] = React.useState('ALL');
 
@@ -29,11 +29,12 @@ function Todo() {
       }
       return item;
     });
-    putItems(newItems);
+    // putItems(newItems);
   };
   
   const handleAdd = text => {
-    putItems([...items, { key: getKey(), text, done: false }]);
+    // putItems([...items, { key: getKey(), text, done: false }]);
+    addItems({ text, done: false });
   };
   
   const handleFilterChange = value => setFilter(value);
@@ -64,7 +65,7 @@ function Todo() {
         {displayItems.length} items
       </div>
       <div className="panel-block">
-        <button className="button is-light is-fullwidth" onClick={clearItems}>
+        <button className="button is-light is-fullwidth" >
           全てのToDoを削除
         </button>
       </div>
