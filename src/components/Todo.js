@@ -1,43 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 /* コンポーネント */
-import TodoItem from './TodoItem';
-import Input from './Input';
-import Filter from './Filter';
+import TodoItem from "./TodoItem";
+import Input from "./Input";
+import Filter from "./Filter";
 
 /* カスタムフック */
 // import useStorage from '../hooks/storage';
-import useFirebaseStorage from '../hooks/firebaseStorage';
+import useFirebaseStorage from "../hooks/firebaseStorage";
 /* ライブラリ */
-import {getKey} from "../lib/util";
+import { getKey } from "../lib/util";
 
 function Todo() {
-  const [items, addItems, putItems, clearItems] = useFirebaseStorage();
-  
-  const [filter, setFilter] = React.useState('ALL');
+  const [items, addItems, updateItem, clearItems] = useFirebaseStorage();
 
-  const displayItems = items.filter(item => {
-    if (filter === 'ALL') return true;
-    if (filter === 'TODO') return !item.done;
-    if (filter === 'DONE') return item.done;
+  const [filter, setFilter] = React.useState("ALL");
+
+  const displayItems = items.filter((item) => {
+    if (filter === "ALL") return true;
+    if (filter === "TODO") return !item.done;
+    if (filter === "DONE") return item.done;
   });
-  
-  const handleCheck = checked => {
-    const newItems = items.map(item => {
-      if (item.key === checked.key) {
-        item.done = !item.done;
-      }
-      return item;
-    });
-    // putItems(newItems);
+
+  const handleCheck = (checked) => {
+    updateItem(checked);
   };
-  
-  const handleAdd = text => {
+
+  const handleAdd = (text) => {
     // putItems([...items, { key: getKey(), text, done: false }]);
     addItems({ text, done: false });
   };
-  
-  const handleFilterChange = value => setFilter(value);
+
+  const handleFilterChange = (value) => setFilter(value);
 
   return (
     <article class="panel is-danger">
@@ -50,22 +44,13 @@ function Todo() {
         </span>
       </div>
       <Input onAdd={handleAdd} />
-      <Filter
-        onChange={handleFilterChange}
-        value={filter}
-      />
-      {displayItems.map(item => (
-        <TodoItem 
-          key={item.key}
-          item={item}
-          onCheck={handleCheck}
-        />
+      <Filter onChange={handleFilterChange} value={filter} />
+      {displayItems.map((item) => (
+        <TodoItem key={item.key} item={item} onCheck={handleCheck} />
       ))}
+      <div className="panel-block">{displayItems.length} items</div>
       <div className="panel-block">
-        {displayItems.length} items
-      </div>
-      <div className="panel-block">
-        <button className="button is-light is-fullwidth" >
+        <button className="button is-light is-fullwidth" onClick={clearItems}>
           全てのToDoを削除
         </button>
       </div>
