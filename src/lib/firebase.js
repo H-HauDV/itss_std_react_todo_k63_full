@@ -14,6 +14,20 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+export const getItemsFromFirebase = async () => {
+    try {
+      const snapshot = await db
+        .collection("todos")
+        .get();
+      const items = snapshot.docs.map(
+        (doc) => ({ ...doc.data(), id: doc.id })
+      );
+      return items;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
 export const addToFirebase= async (item) => {
   try {
     const todoCollection = db.collection("todos");
