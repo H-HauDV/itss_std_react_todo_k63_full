@@ -8,6 +8,7 @@ import Filter from "./Filter";
 /* カスタムフック */
 // import useStorage from '../hooks/storage';
 import useFirebaseStorage from "../hooks/firebaseStorage";
+
 /* ライブラリ */
 import { getKey } from "../lib/util";
 
@@ -34,7 +35,7 @@ function Todo() {
   const handleFilterChange = (value) => setFilter(value);
 
   return (
-    <article class="panel is-danger">
+    <article class="panel is-danger ">
       <div className="panel-heading">
         <span class="icon-text">
           <span class="icon">

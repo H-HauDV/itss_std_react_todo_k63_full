@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import firebase from "firebase/compat/app";
+import "firebase/compat/storage"
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 const firebaseConfig = {
@@ -71,4 +72,34 @@ export const storeUserInfo = async (user) => {
       ...userDoc.data(),
     };
   }
+};
+export const updateUser = async (user, image) => {
+  try {
+    const userDoc = await firebase
+      .firestore()
+      .collection("users")
+      .doc(user.id)
+      .get();
+    if (userDoc.exists) {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.id)
+        .update({ ...userDoc.data(), image: image });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const uploadImage = async (image) => {
+  console.log("Uploading")
+  const ref = firebase.storage().ref().child(`/images/${image.name}`);
+  let downloadUrl = "";
+  try {
+    await ref.put(image);
+    downloadUrl = await ref.getDownloadURL();
+  } catch (err) {
+    console.log(err);
+  }
+  return downloadUrl;
 };
